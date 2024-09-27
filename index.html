@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virus Terdeteksi!</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8d7da;
+            color: #721c24;
+            text-align: center;
+            padding: 50px;
+            overflow: hidden;
+            transition: background-color 0.5s;
+        }
+
+        .container {
+            border: 2px solid #f5c6cb;
+            padding: 20px;
+            border-radius: 5px;
+            background-color: #fff;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        #panicButton {
+            background-color: #c82333;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #panicButton:hover {
+            background-color: #bd2130;
+        }
+
+        #explosion {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 0, 0, 0.8);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1;
+            animation: shake 0.5s infinite;
+        }
+
+        @keyframes shake {
+            0% { transform: translate(0); }
+            25% { transform: translate(-5px, 0); }
+            50% { transform: translate(5px, 0); }
+            75% { transform: translate(-5px, 0); }
+            100% { transform: translate(0); }
+        }
+
+        #screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: black;
+            color: white;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>PERHATIAN!</h1>
+        <p>Virus telah terdeteksi di komputer Anda!</p>
+        <button id="panicButton">Tutup Antivirus</button>
+        <div id="alert" class="hidden">
+            <h2>Anda Terinfeksi!</h2>
+            <p>Segera matikan komputer Anda!</p>
+            <div id="errorMessages"></div>
+        </div>
+    </div>
+    <div id="explosion" class="hidden">
+        <h1>💥 SERANGAN VIRUS 💥</h1>
+        <p>Komputer Anda telah hancur!</p>
+    </div>
+    <div id="screen" class="hidden">
+        <h1>ERROR CRITICAL!</h1>
+        <p>Semua data akan hilang!</p>
+        <button id="closeScreen">Tutup</button>
+    </div>
+    <audio id="beepSound" src="https://www.soundjay.com/button/beep-07.wav" preload="auto"></audio>
+    <audio id="explosionSound" src="https://www.soundjay.com/misc/sounds/explosion-1.mp3" preload="auto"></audio>
+    <audio id="errorSound" src="https://www.soundjay.com/button/error-1.mp3" preload="auto"></audio>
+    <audio id="scareSound" src="https://www.soundjay.com/button/alert-1.mp3" preload="auto"></audio>
+    
+    <script>
+        document.getElementById("panicButton").addEventListener("click", function() {
+            document.getElementById("alert").classList.remove("hidden");
+            this.style.display = "none"; // Menghilangkan tombol
+            generateErrors();
+        });
+
+        function generateErrors() {
+            const errorMessages = document.getElementById("errorMessages");
+            errorMessages.innerHTML = ""; // Kosongkan pesan sebelumnya
+            for (let i = 0; i < 10; i++) {
+                const msg = document.createElement("p");
+                msg.innerText = `Kesalahan ${i + 1}: File tidak dapat diakses!`;
+                errorMessages.appendChild(msg);
+            }
+            document.getElementById("beepSound").play();
+            setTimeout(() => {
+                document.getElementById("explosion").classList.remove("hidden");
+                document.getElementById("explosionSound").play();
+                document.body.style.backgroundColor = "red";
+            }, 3000); // Tampilkan efek setelah 3 detik
+
+            setTimeout(() => {
+                showFullScreenError();
+            }, 6000); // Tampilkan layar penuh setelah 6 detik
+        }
+
+        function showFullScreenError() {
+            document.getElementById("screen").style.display = "flex";
+            document.body.style.backgroundColor = "black";
+            document.body.style.color = "white";
+            document.getElementById("errorSound").play();
+            setTimeout(() => {
+                alert("Browser Anda akan ditutup!"); // Peringatan
+                window.close(); // Menutup jendela (jika diizinkan)
+            }, 5000); // Tunda 5 detik sebelum menutup
+        }
+
+        document.getElementById("closeScreen").addEventListener("click", function() {
+            alert("Ini hanya prank! Komputer Anda aman. :)");
+            document.getElementById("screen").style.display = "none";
+            document.body.style.backgroundColor = "#f8d7da"; // Kembali ke warna awal
+        });
+    </script>
+</body>
+</html>
